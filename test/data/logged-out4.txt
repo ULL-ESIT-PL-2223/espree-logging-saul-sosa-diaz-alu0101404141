@@ -1,0 +1,2 @@
+Entering <anonymous function> at line 2
+Entering main() at line 15

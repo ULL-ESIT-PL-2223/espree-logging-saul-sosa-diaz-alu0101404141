@@ -1,0 +1,6 @@
+Entering <anonymous function>(5) at line 2
+Entering <anonymous function>(4) at line 2
+Entering <anonymous function>(3) at line 2
+Entering <anonymous function>(2) at line 2
+Entering <anonymous function>(1) at line 2
+Entering <anonymous function>(0) at line 2
