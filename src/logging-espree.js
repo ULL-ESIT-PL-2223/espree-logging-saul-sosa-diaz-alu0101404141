@@ -16,15 +16,17 @@ import * as fs from "fs/promises";
 
 export async function transpile(inputFile, outputFile) {
   let input = await fs.readFile(inputFile, 'utf-8');
+  console.log("input:\n" + input);
   let output = addLogging(input);
   if (outputFile === undefined) {
     console.log(output);
     return;
   }
   await fs.writeFile(outputFile, output);
+  console.log("Output in file \'" + `${outputFile}`+"\'");
 }
 
-export function addLogging(code) {
+function addLogging(code) {
   const ast = espree.parse(code, {ecmaVersion: 12, loc: true});
   estraverse.traverse(ast, {
     enter: function (node, parent) {
@@ -49,3 +51,4 @@ function addBeforeCode(node) {
   const beforeNodes = espree.parse(beforeCode, { ecmaVersion: 12 }).body;
   node.body.body = beforeNodes.concat(node.body.body);
 }
+
