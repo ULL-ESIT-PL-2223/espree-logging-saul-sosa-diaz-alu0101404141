@@ -1,12 +1,6 @@
 /**
- * Este código exporta una función llamada addLogging que toma un argumento de code. La función hace lo siguiente:
-
-Analiza el code utilizando la biblioteca espree y crea un árbol sintáctico abstracto (AST).
-Utiliza la biblioteca estraverse para recorrer el AST y buscar funciones. Cuando encuentra una función, llama a la función addBeforeCode para agregar código de registro antes del cuerpo de la función.
-Genera el código actualizado utilizando la biblioteca escodegen y lo devuelve.
-La función addBeforeCode toma un nodo AST de una función y agrega código de registro al principio del cuerpo de la función. El código de registro se genera utilizando la información del nodo de la función, como el nombre de la función, los nombres de los parámetros y la línea en la que se encuentra la función en el archivo fuente. El código de registro se agrega al principio del cuerpo de la función utilizando el método concat() que hemos descrito anteriormente.
-
-En resumen, la función addLogging se utiliza para agregar código de registro a las funciones de un archivo JavaScript utilizando AST. Esto puede ser útil para depurar y rastrear el flujo de ejecución de un programa.
+ * Módulo que contiene funciones para transpilar código fuente.
+ * @module transpiler
  */
 
 import * as escodegen from "escodegen";
@@ -14,6 +8,13 @@ import * as espree from "espree";
 import * as estraverse from "estraverse";
 import * as fs from "fs/promises";
 
+/**
+ * Transpila el archivo de entrada agregando registro de eventos y escribe el resultado en un archivo de salida o lo imprime en la consola.
+ * @async
+ * @function
+ * @param {string} inputFile - La ruta del archivo de entrada.
+ * @param {string} [outputFile] - La ruta del archivo de salida. Si no se especifica, el resultado se imprime en la consola.
+ */
 export async function transpile(inputFile, outputFile) {
   let input = await fs.readFile(inputFile, 'utf-8');
   console.log("input:\n" + input);
@@ -26,6 +27,12 @@ export async function transpile(inputFile, outputFile) {
   console.log("Output in file \'" + `${outputFile}`+"\'");
 }
 
+/**
+ * Agrega registro de eventos al código proporcionado y devuelve el código modificado.
+ * @function
+ * @param {string} code - El código al que se le agregará el registro de eventos.
+ * @returns {string} El código modificado con el registro de eventos.
+ */
 function addLogging(code) {
   const ast = espree.parse(code, {ecmaVersion: 12, loc: true});
   estraverse.traverse(ast, {
@@ -39,7 +46,12 @@ function addLogging(code) {
   })
   return escodegen.generate(ast);
 }
-
+ /**
+  * @brief Agrega código de registro de eventos antes del código de la función especificada en el nodo.
+  * @function
+  * @param {Object} node - El nodo del árbol de análisis sintáctico que contiene la función a la que se le agregará el registro de eventos.
+  * @returns {void} 
+  */
 function addBeforeCode(node) {
   const name = node.id ? node.id.name : '<anonymous function>';
   let paramNames = '';
